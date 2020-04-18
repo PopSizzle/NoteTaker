@@ -33,18 +33,26 @@ app.get("/api/notes", function(req, res) {
 });
 
 // post notes to saved storage
-app.post("/api/notes", function(res, res) {
-    fs.appendFile("/db/db.json", "Hello New Note here", function(err) {
+app.post("/api/notes", function(req, res) {
+    
+    let note = req.body;
 
-    if (err) {
-      return console.log(err);
-    }
-  
+    fs.appendFile("/db/db.json", note, function(err) {
+
+        if (err) {
+            return console.log(err);
+        }
     console.log("Success!");
-  
-  });
+    });
 
-})
+    fs.readFile(path.join(__dirname, "db/db.json"), function(err, data) {
+        if(err){
+            console.log(err);
+        }
+        var storedNotes = JSON.parse(data);
+        res.json(storedNotes);
+    });
+});
 
 
 // start server
