@@ -36,24 +36,27 @@ app.get("/api/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
     
     let note = req.body;
-
-    fs.appendFile("/db/db.json", note, function(err) {
-
+    fs.readFile(__dirname, "db/db.json", function(err) {
         if (err) {
             return console.log(err);
         }
-    console.log("Success!");
-    });
-
-    fs.readFile(path.join(__dirname, "db/db.json"), function(err, data) {
-        if(err){
-            console.log(err);
-        }
+        console.log("Success!");
+        
+        const result = JSON.parse(data);
+        result.push(note);
+        const jsonResult = JSON.stringify(result);
+        
+        fs.writeFile(path.join(__dirname, "db/db.json"), jsonResult, function(err, data) {
+            if(err){
+                console.log(err);
+            }
         var storedNotes = JSON.parse(data);
         res.json(storedNotes);
+        });
     });
 });
 
+// delete notes
 app.delete("api/notes/:id", function(req, res) {
     var note = req.params.id;
 
@@ -62,9 +65,15 @@ app.delete("api/notes/:id", function(req, res) {
             console.log(err);
         }
         const result = JSON.parse(data);
-        
+        result.splice(note,1);
 
-
+        fs.writeFile(path.join(__dirname,"db/db.json"), JSON.stringify(result), function(err, data) {
+            if(err) {
+                console.log(err);
+            }
+            res.json(result);
+        })
+    
     })
 })
 
