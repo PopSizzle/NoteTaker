@@ -54,6 +54,20 @@ app.post("/api/notes", function(req, res) {
     });
 });
 
+app.delete("api/notes/:id", function(req, res) {
+    var note = req.params.id;
+
+    fs.readFile(path.join(__dirname,"db/db.json"), function(err, data) {
+        if(err) {
+            console.log(err);
+        }
+        const result = JSON.parse(data);
+        
+
+
+    })
+})
+
 
 // start server
 app.listen(PORT, function() {
