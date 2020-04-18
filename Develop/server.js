@@ -3,10 +3,12 @@ var path = require("path");
 var fs = require("fs");
 
 var app = express();
-var PORT = 3000;
+
 
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
+
+var PORT = process.env.PORT || 3000;
 
 // routes
 
@@ -68,9 +70,7 @@ app.delete("api/notes/:id", function(req, res) {
         result.splice(note,1);
 
         fs.writeFile(path.join(__dirname,"db/db.json"), JSON.stringify(result), function(err, data) {
-            if(err) {
-                console.log(err);
-            }
+            if(err) throw err;
             res.json(result);
         })
     
