@@ -4,7 +4,6 @@ var fs = require("fs");
 
 var app = express();
 
-
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 
@@ -17,10 +16,24 @@ app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"))
 });
 
+// index.js location
+app.get("/assets/js/index.js", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/assets/js/index.js"))
+});
+
+// styles.css location
+app.get("/assets/css/styles.css", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/assets/css/styles.css"))
+})
+
 // notes.html
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"))
 });
+
+// app.get("/api/notes/db/db.json", function(req, res) {
+//     res.sendFile(path.join(__dirname, "db/db.json"))
+// });
 
 
 // Get notes from saved storage
@@ -49,10 +62,8 @@ app.post("/api/notes", function(req, res) {
         const jsonResult = JSON.stringify(result);
         
         fs.writeFile(path.join(__dirname, "db/db.json"), jsonResult, function(err, data) {
-            if(err){
-                console.log(err);
-            }
-        var storedNotes = JSON.parse(data);
+            if(err) throw err;
+        // var storedNotes = JSON.parse(data);
         res.json(storedNotes);
         });
     });
