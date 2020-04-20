@@ -53,6 +53,7 @@ app.post("/api/notes", function(req, res) {
         
         const result = JSON.parse(data);
         console.log(result);
+        note.id = result.length;
         result.push(note);
         const jsonResult = JSON.stringify(result);
         console.log(jsonResult);
@@ -66,8 +67,8 @@ app.post("/api/notes", function(req, res) {
 });
 
 // delete notes
-app.delete("/api/notes/:id", function(req) {
-    var thisNote = req.params.id;
+app.delete("/api/notes/:id", function(req, res) {
+    var thisNote = parseInt(req.params.id);
     console.log(thisNote);
     fs.readFile(path.join(__dirname,"db/db.json"), function(err, data) {
         if(err) {
@@ -75,11 +76,13 @@ app.delete("/api/notes/:id", function(req) {
         }
         console.log("success");
         const result = JSON.parse(data);
-        console.log(data);
+        
+        const newResult = result.filter(note => note.id !== thisNote);
+        console.log(newResult);
 
-        fs.writeFile(path.join(__dirname,"db/db.json"), JSON.stringify(result), function(err, data) {
+        fs.writeFile(path.join(__dirname,"db/db.json"), JSON.stringify(newResult), function(err, data) {
             if(err) throw err;
-            res.json(result);
+            res.json(newResult);
         })
     
     })

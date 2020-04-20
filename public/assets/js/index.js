@@ -52,10 +52,7 @@ var renderActiveNote = function() {
 
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
-  console.log(lastNoteID);
-  lastNoteID = parseInt(lastNoteID);
-  lastNoteID ++;
-  console.log(lastNoteID);
+
   var newNote = {
     title: $noteTitle.val(),
     text: $noteText.val(),
@@ -123,8 +120,7 @@ var renderNoteList = function(notes) {
     var $span = $("<span>").text(note.title);
     var $delBtn = $(
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>");
-    lastnoteID = parseInt(notes[i].id);
-    console.log(lastnoteID);
+    
     $li.append($span, $delBtn);
     noteListItems.push($li);
   }
