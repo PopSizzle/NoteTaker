@@ -31,12 +31,6 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"))
 });
 
-// app.get("/api/notes/db/db.json", function(req, res) {
-//     res.sendFile(path.join(__dirname, "db/db.json"))
-// });
-
-
-// Get notes from saved storage
 app.get("/api/notes", function(req, res) {
     fs.readFile(path.join(__dirname, "db/db.json"), function(err, data) {
         if(err){
@@ -51,34 +45,37 @@ app.get("/api/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
     
     let note = req.body;
-    fs.readFile(__dirname, "db/db.json", function(err) {
+    fs.readFile(path.join(__dirname, "db/db.json"), function(err, data) {
         if (err) {
             return console.log(err);
         }
         console.log("Success!");
         
         const result = JSON.parse(data);
+        console.log(result);
         result.push(note);
         const jsonResult = JSON.stringify(result);
+        console.log(jsonResult);
         
         fs.writeFile(path.join(__dirname, "db/db.json"), jsonResult, function(err, data) {
             if(err) throw err;
         // var storedNotes = JSON.parse(data);
-        res.json(storedNotes);
+        res.json(jsonResult);
         });
     });
 });
 
 // delete notes
-app.delete("api/notes/:id", function(req, res) {
-    var note = req.params.id;
-
+app.delete("/api/notes/:id", function(req) {
+    var thisNote = req.params.id;
+    console.log(thisNote);
     fs.readFile(path.join(__dirname,"db/db.json"), function(err, data) {
         if(err) {
             console.log(err);
         }
+        console.log("success");
         const result = JSON.parse(data);
-        result.splice(note,1);
+        console.log(data);
 
         fs.writeFile(path.join(__dirname,"db/db.json"), JSON.stringify(result), function(err, data) {
             if(err) throw err;

@@ -3,6 +3,7 @@ var $noteText = $(".note-textarea");
 var $saveNoteBtn = $(".save-note");
 var $newNoteBtn = $(".new-note");
 var $noteList = $(".list-container .list-group");
+var lastNoteID = 1;
 
 // activeNote is used to keep track of the note in the textarea
 var activeNote = {};
@@ -27,7 +28,7 @@ var saveNote = function(note) {
 // A function for deleting a note from the db
 var deleteNote = function(id) {
   return $.ajax({
-    url: "api/notes/" + id,
+    url: "/api/notes/" + id,
     method: "DELETE"
   });
 };
@@ -51,9 +52,14 @@ var renderActiveNote = function() {
 
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
+  console.log(lastNoteID);
+  lastNoteID = parseInt(lastNoteID);
+  lastNoteID ++;
+  console.log(lastNoteID);
   var newNote = {
     title: $noteTitle.val(),
-    text: $noteText.val()
+    text: $noteText.val(),
+    id: lastNoteID
   };
 
   saveNote(newNote).then(function(data) {
@@ -71,6 +77,7 @@ var handleNoteDelete = function(event) {
     .parent(".list-group-item")
     .data();
 
+  console.log(note);
   if (activeNote.id === note.id) {
     activeNote = {};
   }
@@ -115,9 +122,9 @@ var renderNoteList = function(notes) {
     var $li = $("<li class='list-group-item'>").data(note);
     var $span = $("<span>").text(note.title);
     var $delBtn = $(
-      "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
-    );
-
+      "<i class='fas fa-trash-alt float-right text-danger delete-note'>");
+    lastnoteID = parseInt(notes[i].id);
+    console.log(lastnoteID);
     $li.append($span, $delBtn);
     noteListItems.push($li);
   }
